@@ -39,8 +39,10 @@ function* updateCar(api, action) {
 
   // success?
   if (response.ok) {
+    console.log('updateCar successfully !!!')
     yield put(CarActions.carUpdateSuccess(response.data));
   } else {
+    console.log('updateCar failed !!!')
     yield put(CarActions.carUpdateFailure(response.data));
   }
 }

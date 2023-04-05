@@ -18,7 +18,6 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required(),
   action: Yup.string().required(),
   maintainance: Yup.mixed().required(),
-  user: Yup.mixed().required(),
 });
 
 const Action = [
@@ -58,8 +57,6 @@ function MaintainanceDetailsEditScreen(props) {
     reset,
     getAllMaintainances,
     maintainanceList,
-    getAllUsers,
-    userList,
   } = props;
 
   const [formValue, setFormValue] = React.useState();
@@ -86,8 +83,7 @@ function MaintainanceDetailsEditScreen(props) {
   // fetch related entities
   React.useEffect(() => {
     getAllMaintainances();
-    getAllUsers();
-  }, [getAllMaintainances, getAllUsers]);
+  }, [getAllMaintainances]);
 
   useDidUpdateEffect(() => {
     if (updating === false) {
@@ -117,7 +113,6 @@ function MaintainanceDetailsEditScreen(props) {
   const actionRef = createRef();
   const priceRef = createRef();
   const maintainanceRef = createRef();
-  const userRef = createRef();
 
   return (
     <View style={styles.container}>
@@ -160,16 +155,6 @@ function MaintainanceDetailsEditScreen(props) {
               placeholder="Select Maintainance"
               testID="maintainanceSelectInput"
             />
-            <FormField
-              name="user"
-              inputType="select-one"
-              ref={userRef}
-              listItems={userList}
-              listItemLabelField="login"
-              label="User"
-              placeholder="Select User"
-              testID="userSelectInput"
-            />
 
             <FormButton title={'Save'} testID={'submitButton'} />
           </Form>
@@ -190,7 +175,6 @@ const entityToFormValue = (value) => {
     action: value.action ?? null,
     price: value.price ?? null,
     maintainance: value.maintainance && value.maintainance.id ? value.maintainance.id : null,
-    user: value.user && value.user.id ? value.user.id : null,
   };
 };
 const formValueToEntity = (value) => {
@@ -201,14 +185,12 @@ const formValueToEntity = (value) => {
     price: value.price ?? null,
   };
   entity.maintainance = value.maintainance ? { id: value.maintainance } : null;
-  entity.user = value.user ? { id: value.user } : null;
   return entity;
 };
 
 const mapStateToProps = (state) => {
   return {
     maintainanceList: state.maintainances.maintainanceList ?? [],
-    userList: state.users.userList ?? [],
     maintainanceDetails: state.maintainanceDetails.maintainanceDetails,
     fetching: state.maintainanceDetails.fetchingOne,
     updating: state.maintainanceDetails.updating,
@@ -220,7 +202,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAllMaintainances: (options) => dispatch(MaintainanceActions.maintainanceAllRequest(options)),
-    getAllUsers: (options) => dispatch(UserActions.userAllRequest(options)),
     getMaintainanceDetails: (id) => dispatch(MaintainanceDetailsActions.maintainanceDetailsRequest(id)),
     getAllMaintainanceDetails: (options) => dispatch(MaintainanceDetailsActions.maintainanceDetailsAllRequest(options)),
     updateMaintainanceDetails: (maintainanceDetails) =>

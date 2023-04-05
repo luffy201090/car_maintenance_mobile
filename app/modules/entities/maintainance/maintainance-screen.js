@@ -26,7 +26,8 @@ function MaintainanceScreen(props) {
     return (
       <TouchableOpacity onPress={() => props.navigation.navigate('MaintainanceDetail', { entityId: item.id })}>
         <View style={styles.listRow}>
-          <Text style={styles.whiteLabel}>ID: {item.id}</Text>
+          <Text style={styles.whiteLabel}>Mức bảo dưỡng: {item.level}</Text>
+          <Text style={styles.whiteLabel}>Giá tiền: {item.price}</Text>
           {/* <Text style={styles.label}>{item.description}</Text> */}
         </View>
       </TouchableOpacity>

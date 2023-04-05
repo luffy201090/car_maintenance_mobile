@@ -1,16 +1,15 @@
-import React, { createRef } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import React, {createRef} from 'react';
+import {ActivityIndicator, Text, View} from 'react-native';
+import {connect} from 'react-redux';
 import * as Yup from 'yup';
 
 import MaintainanceActions from './maintainance.reducer';
 import CarActions from '../car/car.reducer';
-import UserActions from '../../../shared/reducers/user.reducer';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import FormButton from '../../../shared/components/form/jhi-form-button';
 import FormField from '../../../shared/components/form/jhi-form-field';
 import Form from '../../../shared/components/form/jhi-form';
-import { useDidUpdateEffect } from '../../../shared/util/use-did-update-effect';
+import {useDidUpdateEffect} from '../../../shared/util/use-did-update-effect';
 import styles from './maintainance-styles';
 
 // set up validation schema for the form
@@ -18,7 +17,6 @@ const validationSchema = Yup.object().shape({
   level: Yup.string().required(),
   date: Yup.date().required(),
   car: Yup.mixed().required(),
-  user: Yup.mixed().required(),
 });
 
 function MaintainanceEditScreen(props) {
@@ -35,8 +33,6 @@ function MaintainanceEditScreen(props) {
     reset,
     getAllCars,
     carList,
-    getAllUsers,
-    userList,
   } = props;
 
   const [formValue, setFormValue] = React.useState();
@@ -63,8 +59,7 @@ function MaintainanceEditScreen(props) {
   // fetch related entities
   React.useEffect(() => {
     getAllCars();
-    getAllUsers();
-  }, [getAllCars, getAllUsers]);
+  }, [getAllCars]);
 
   useDidUpdateEffect(() => {
     if (updating === false) {
@@ -95,7 +90,6 @@ function MaintainanceEditScreen(props) {
   const placeRef = createRef();
   const dateRef = createRef();
   const carRef = createRef();
-  const userRef = createRef();
 
   return (
     <View style={styles.container}>
@@ -148,16 +142,6 @@ function MaintainanceEditScreen(props) {
               placeholder="Select Car"
               testID="carSelectInput"
             />
-            <FormField
-              name="user"
-              inputType="select-one"
-              ref={userRef}
-              listItems={userList}
-              listItemLabelField="login"
-              label="User"
-              placeholder="Select User"
-              testID="userSelectInput"
-            />
 
             <FormButton title={'Save'} testID={'submitButton'} />
           </Form>
@@ -179,7 +163,6 @@ const entityToFormValue = (value) => {
     place: value.place ?? null,
     date: value.date ?? null,
     car: value.car && value.car.id ? value.car.id : null,
-    user: value.user && value.user.id ? value.user.id : null,
   };
 };
 const formValueToEntity = (value) => {
@@ -191,14 +174,12 @@ const formValueToEntity = (value) => {
     date: value.date ?? null,
   };
   entity.car = value.car ? { id: value.car } : null;
-  entity.user = value.user ? { id: value.user } : null;
   return entity;
 };
 
 const mapStateToProps = (state) => {
   return {
     carList: state.cars.carList ?? [],
-    userList: state.users.userList ?? [],
     maintainance: state.maintainances.maintainance,
     fetching: state.maintainances.fetchingOne,
     updating: state.maintainances.updating,
@@ -210,7 +191,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getAllCars: (options) => dispatch(CarActions.carAllRequest(options)),
-    getAllUsers: (options) => dispatch(UserActions.userAllRequest(options)),
     getMaintainance: (id) => dispatch(MaintainanceActions.maintainanceRequest(id)),
     getAllMaintainances: (options) => dispatch(MaintainanceActions.maintainanceAllRequest(options)),
     updateMaintainance: (maintainance) => dispatch(MaintainanceActions.maintainanceUpdateRequest(maintainance)),
